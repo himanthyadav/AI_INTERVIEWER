@@ -12,8 +12,6 @@ const InterviewHistory = lazy(() => import('./pages/InterviewHistory'));
 export const ThemeContext = createContext();
 
 const ProtectedRoute = ({ children }) => {
-  const user = localStorage.getItem('user');
-  if (!user) return <Navigate to="/" replace />;
   return children;
 };
 
@@ -43,7 +41,7 @@ function App() {
           <ThemeToggle />
           <Suspense fallback={<div style={styles.loaderWrapper}><div style={styles.spinner}></div></div>}>
             <Routes>
-              <Route path="/" element={<Login />} />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />

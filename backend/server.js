@@ -490,6 +490,33 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+// 2.1 Guest Session API
+app.post('/api/guest-login', async (req, res) => {
+  try {
+    const token = `${Date.now()}${Math.floor(Math.random() * 100000)}`;
+    const guestUser = new User({
+      firstName: 'Guest',
+      lastName: token.slice(-4),
+      email: `guest_${token}@ai.local`,
+      password: token
+    });
+
+    await guestUser.save();
+
+    res.status(201).json({
+      message: 'Guest session created',
+      user: {
+        id: guestUser._id,
+        firstName: guestUser.firstName,
+        lastName: guestUser.lastName,
+        email: guestUser.email
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // 3. Get User Details API
 app.get('/api/user/:userId', async (req, res) => {
   try {

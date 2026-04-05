@@ -7,6 +7,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:5000
 function Dashboard() {
   const navigate = useNavigate();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const [isBootstrappingUser, setIsBootstrappingUser] = useState(false);
   const [toast, setToast] = useState('');
   const [interviewData, setInterviewData] = useState({
     position: 'Frontend Developer',
@@ -43,10 +44,28 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    if (!user) {
-      navigate('/');
-      return;
-    }
+    const ensureUserSession = async () => {
+      if (user) return;
+
+      try {
+        setIsBootstrappingUser(true);
+        const response = await axios.post(`${API_BASE_URL}/api/guest-login`);
+        const guestUser = response.data?.user;
+
+        if (guestUser?.id) {
+          localStorage.setItem('user', JSON.stringify(guestUser));
+          setUser(guestUser);
+        } else {
+          showToast('Unable to start guest session. Please try again.');
+        }
+      } catch {
+        showToast('Unable to start guest session. Please try again.');
+      } finally {
+        setIsBootstrappingUser(false);
+      }
+    };
+
+    ensureUserSession();
 
     const handleOnline = () => setCompatibility(prev => ({ ...prev, internet: true }));
     const handleOffline = () => setCompatibility(prev => ({ ...prev, internet: false }));
@@ -58,7 +77,7 @@ function Dashboard() {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, [navigate, user]);
+  }, [user]);
 
   const handlePrerequisiteOpen = () => {
     if (!interviewData.position.trim()) return showToast('Please enter the target role.');
@@ -157,6 +176,14 @@ function Dashboard() {
     setInterviewData((prev) => ({ ...prev, position: roleTitle }));
     showToast(`Selected role: ${roleTitle}`);
   };
+
+  if (isBootstrappingUser) {
+    return (
+      <div style={styles.loaderWrap}>
+        <div className="spinner" style={styles.loaderSpinner}></div>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container} className="dashboard-shell">
@@ -348,6 +375,8 @@ function Dashboard() {
 }
 
 const styles = {
+  loaderWrap: { minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' },
+  loaderSpinner: { width: '42px', height: '42px', border: '4px solid var(--border)', borderTopColor: 'var(--primary)', borderRadius: '50%' },
   container: { padding: '20px', width: '100%', minHeight: '100vh' },
   pageLayout: { display: 'flex', gap: '20px', maxWidth: '1440px', margin: '0 auto' },
   sidebar: { width: '260px', minHeight: 'calc(100vh - 48px)', padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: '10px', position: 'sticky', top: '24px' },
