@@ -8,6 +8,7 @@ function InterviewHistory() {
   const navigate = useNavigate();
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedChat, setSelectedChat] = useState(null);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -23,6 +24,9 @@ function InterviewHistory() {
     try {
       await axios.delete(`${API_BASE_URL}/api/interview/${id}`);
       setInterviews(prev => prev.filter(i => i._id !== id));
+      if (selectedChat?._id === id) {
+        setSelectedChat(null);
+      }
     } catch {}
   };
 
@@ -37,7 +41,7 @@ function InterviewHistory() {
       <div style={styles.header}>
         <div>
           <h1 style={styles.title}>Session Archives</h1>
-          <p style={styles.subtitle}>Review your past performance and metrics.</p>
+          <p style={styles.subtitle}>History shows full chat. Analysis shows performance report.</p>
         </div>
         <button style={styles.backBtn} onClick={() => navigate('/dashboard')}>New Session</button>
       </div>
@@ -64,8 +68,9 @@ function InterviewHistory() {
             <div style={styles.meta}>Level: {item.difficulty} • Exp: {item.experience}</div>
             
             <div style={styles.actions}>
+              <button style={styles.chatBtn} onClick={() => setSelectedChat(item)}>View Chat</button>
               {!item.isStart ? (
-                <button style={styles.reportBtn} onClick={() => navigate(`/report/${item._id}`)}>View Report</button>
+                <button style={styles.reportBtn} onClick={() => navigate(`/report/${item._id}`)}>View Analysis</button>
               ) : (
                 <button style={styles.resumeBtn} onClick={() => navigate(`/interview/${item._id}`)}>Resume</button>
               )}
@@ -74,6 +79,35 @@ function InterviewHistory() {
           </div>
         ))}
       </div>
+
+      {selectedChat && (
+        <div style={styles.modalOverlay} onClick={() => setSelectedChat(null)}>
+          <div style={styles.modalCard} className="glass-panel" onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <div>
+                <h2 style={styles.modalTitle}>Chat History</h2>
+                <p style={styles.modalSub}>{selectedChat.position} • {selectedChat.difficulty}</p>
+              </div>
+              <button style={styles.closeBtn} onClick={() => setSelectedChat(null)}>Close</button>
+            </div>
+
+            <div style={styles.chatWrap}>
+              {(selectedChat.chatTranscript || []).length > 0 ? (
+                selectedChat.chatTranscript.map((msg, idx) => (
+                  <div key={idx} style={msg.role === 'user' ? styles.userRow : styles.aiRow}>
+                    <div style={msg.role === 'user' ? styles.userBubble : styles.aiBubble}>
+                      <div style={styles.msgRole}>{msg.role === 'user' ? 'You' : 'AI Interviewer'}</div>
+                      <div style={styles.msgText}>{msg.message}</div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p style={styles.emptyChat}>No chat messages available for this interview yet.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -100,9 +134,24 @@ const styles = {
   role: { fontSize: '20px', fontWeight: '700', marginBottom: '8px' },
   meta: { color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' },
   actions: { display: 'flex', gap: '12px', marginTop: 'auto' },
+  chatBtn: { flex: 1, background: 'rgba(14,165,233,0.12)', color: '#0369a1', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' },
   reportBtn: { flex: 1, background: 'var(--text-primary)', color: 'var(--surface)', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' },
   resumeBtn: { flex: 1, background: 'var(--primary)', color: 'white', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' },
-  delBtn: { background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }
+  delBtn: { background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' },
+  modalOverlay: { position: 'fixed', inset: 0, background: 'rgba(2, 6, 23, 0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', zIndex: 1200 },
+  modalCard: { width: 'min(920px, 100%)', maxHeight: '86vh', display: 'flex', flexDirection: 'column', padding: '18px' },
+  modalHeader: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', borderBottom: '1px solid var(--border)', paddingBottom: '12px', marginBottom: '12px' },
+  modalTitle: { margin: 0, fontSize: '24px', fontWeight: 700 },
+  modalSub: { margin: '4px 0 0', color: 'var(--text-secondary)' },
+  closeBtn: { background: 'var(--surface)', color: 'var(--text-primary)', border: '1px solid var(--border)', padding: '8px 14px', borderRadius: '8px', fontWeight: 600, cursor: 'pointer' },
+  chatWrap: { overflowY: 'auto', padding: '8px', display: 'flex', flexDirection: 'column', gap: '10px' },
+  userRow: { display: 'flex', justifyContent: 'flex-end' },
+  aiRow: { display: 'flex', justifyContent: 'flex-start' },
+  userBubble: { maxWidth: '78%', background: 'var(--primary)', color: 'white', borderRadius: '14px 14px 4px 14px', padding: '10px 12px' },
+  aiBubble: { maxWidth: '78%', background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-primary)', borderRadius: '14px 14px 14px 4px', padding: '10px 12px' },
+  msgRole: { fontSize: '12px', fontWeight: 700, marginBottom: '4px', opacity: 0.9 },
+  msgText: { whiteSpace: 'pre-wrap', lineHeight: 1.5 },
+  emptyChat: { color: 'var(--text-secondary)', textAlign: 'center', padding: '20px' }
 };
 
 export default InterviewHistory;
