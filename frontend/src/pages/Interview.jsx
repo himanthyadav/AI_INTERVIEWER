@@ -89,9 +89,16 @@ function Interview() {
   const handleStop = async () => {
     try {
       await axios.post(`${API_BASE_URL}/api/interview/stop/${interviewId}`);
-      window.speechSynthesis?.cancel();
+    } catch {
+      // Fall through so the user can still leave the interview screen.
+    } finally {
+      try {
+        window.speechSynthesis?.cancel();
+        socketRef.current?.disconnect();
+      } catch {}
+
       navigate('/history');
-    } catch {}
+    }
   };
 
   return (
