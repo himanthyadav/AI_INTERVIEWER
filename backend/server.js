@@ -9,7 +9,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 dotenv.config();
 
-// Polyfill fetch APIs for Node 16 runtime.
+
 if (!global.fetch) {
   global.fetch = fetch;
   global.Headers = fetch.Headers;
@@ -26,15 +26,14 @@ const io = new Server(server, {
   }
 });
 
-// Middleware
+
 app.use(cors());
 app.use(express.json());
 
-// Models
 const User = require('./models/User');
 const Interview = require('./models/Interview');
 
-// Initialize Gemini AI
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const isGeminiQuotaOrRateLimitError = (error) => {
@@ -42,7 +41,8 @@ const isGeminiQuotaOrRateLimitError = (error) => {
   return message.includes('429') || message.includes('quota') || message.includes('rate limit');
 };
 
-const AI_REPLY_TIMEOUT_MS = 2800;
+const AI_REPLY_TIMEOUT_MS = Number(process.env.AI_REPLY_TIMEOUT_MS || 8000);
+const AI_REPORT_TIMEOUT_MS = Number(process.env.AI_REPORT_TIMEOUT_MS || 12000);
 
 const STOP_WORDS = new Set([
   'the', 'a', 'an', 'is', 'are', 'was', 'were', 'to', 'for', 'in', 'on', 'of', 'and', 'or', 'with', 'it', 'that', 'this', 'i', 'you', 'we', 'they', 'he', 'she', 'my', 'your', 'our', 'as', 'at', 'by', 'from', 'be', 'have', 'has', 'had'
@@ -658,10 +658,10 @@ app.post('/api/interview/report/:interviewId', async (req, res) => {
       return res.status(404).json({ message: 'Interview not found' });
     }
 
-    // Analyze the interview using Gemini AI
+    
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     
-    // Prepare the conversation transcript
+    
     const transcript = interview.chatTranscript
       .map(chat => `${chat.role.toUpperCase()}: ${chat.message}`)
       .join('\n\n');
@@ -694,17 +694,21 @@ Provide a comprehensive analysis in the following JSON format (respond ONLY with
   "performanceLevel": "<Excellent/Good/Average/Needs Improvement>"
 }`;
 
-    const result = await model.generateContent(prompt);
+    const result = await withTimeout(
+      model.generateContent(prompt),
+      AI_REPORT_TIMEOUT_MS,
+      'AI report generation timed out'
+    );
     const aiResponse = result.response.text();
     
-    // Parse the JSON response
+    
     let reportData;
     try {
-      // Remove markdown code blocks if present
+      
       const cleanedResponse = aiResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
       reportData = JSON.parse(cleanedResponse);
     } catch (parseError) {
-      // If parsing fails, return a default structure
+      
       reportData = {
         overallScore: 70,
         strengths: ["Completed the interview", "Responded to questions", "Showed engagement"],
@@ -740,22 +744,20 @@ Provide a comprehensive analysis in the following JSON format (respond ONLY with
   } catch (error) {
     console.error('Report generation error:', error);
 
-    if (isGeminiQuotaOrRateLimitError(error)) {
-      try {
-        const interview = await Interview.findById(req.params.interviewId);
-        if (!interview) {
-          return res.status(404).json({ message: 'Interview not found' });
-        }
-
-        const fallbackReport = buildFallbackReport(interview);
-        return res.json({
-          message: 'Report generated using backup mode',
-          report: fallbackReport,
-          fallback: true
-        });
-      } catch (fallbackError) {
-        console.error('Fallback report error:', fallbackError);
+    try {
+      const interview = await Interview.findById(req.params.interviewId);
+      if (!interview) {
+        return res.status(404).json({ message: 'Interview not found' });
       }
+
+      const fallbackReport = buildFallbackReport(interview);
+      return res.json({
+        message: 'Report generated using backup mode',
+        report: fallbackReport,
+        fallback: true
+      });
+    } catch (fallbackError) {
+      console.error('Fallback report error:', fallbackError);
     }
 
     res.status(500).json({ message: 'Error generating report', error: error.message });
@@ -968,52 +970,50 @@ io.on('connection', (socket) => {
     } catch (error) {
       console.error('Error:', error);
 
-      if (isGeminiQuotaOrRateLimitError(error) || isAiResponseTimeoutError(error)) {
-        try {
-          const { interviewId, message } = data;
-          const interview = await Interview.findById(interviewId);
-          const currentStageIndex = typeof interview?.currentStageIndex === 'number' ? interview.currentStageIndex : -1;
-          const nextStageIndex = Math.min(currentStageIndex + 1, INTERVIEW_FLOW_STAGES.length - 1);
-          const stageInfo = {
-            stageIndex: nextStageIndex,
-            stage: INTERVIEW_FLOW_STAGES[nextStageIndex],
-            stepNumber: nextStageIndex + 1,
-            totalSteps: INTERVIEW_FLOW_STAGES.length
-          };
-          const stage = stageInfo.stage;
-          const lastAiQuestion = [...(interview?.chatTranscript || [])]
-            .reverse()
-            .find((chat) => chat.role === 'ai')?.message || '';
-          const fallbackReply = buildFallbackInterviewerReply(interview, message, lastAiQuestion, stage);
+      try {
+        const { interviewId, message } = data;
+        const interview = await Interview.findById(interviewId);
+        const currentStageIndex = typeof interview?.currentStageIndex === 'number' ? interview.currentStageIndex : -1;
+        const nextStageIndex = Math.min(currentStageIndex + 1, INTERVIEW_FLOW_STAGES.length - 1);
+        const stageInfo = {
+          stageIndex: nextStageIndex,
+          stage: INTERVIEW_FLOW_STAGES[nextStageIndex],
+          stepNumber: nextStageIndex + 1,
+          totalSteps: INTERVIEW_FLOW_STAGES.length
+        };
+        const stage = stageInfo.stage;
+        const lastAiQuestion = [...(interview?.chatTranscript || [])]
+          .reverse()
+          .find((chat) => chat.role === 'ai')?.message || '';
+        const fallbackReply = buildFallbackInterviewerReply(interview, message, lastAiQuestion, stage);
 
-          await Interview.findByIdAndUpdate(interviewId, {
-            $push: {
-              chatTranscript: {
-                role: 'ai',
-                message: fallbackReply,
-                timestamp: new Date()
-              }
+        await Interview.findByIdAndUpdate(interviewId, {
+          $push: {
+            chatTranscript: {
+              role: 'ai',
+              message: fallbackReply,
+              timestamp: new Date()
             }
-          });
+          }
+        });
 
-          socket.emit('ai-response', {
-            message: fallbackReply,
-            stage: stage.title,
-            stageObjective: stage.objective,
-            step: stageInfo.stepNumber,
-            totalSteps: stageInfo.totalSteps
-          });
+        socket.emit('ai-response', {
+          message: fallbackReply,
+          stage: stage?.title || 'Interview',
+          stageObjective: stage?.objective || 'Continue with the interview flow.',
+          step: stageInfo.stepNumber,
+          totalSteps: stageInfo.totalSteps
+        });
 
-          await Interview.findByIdAndUpdate(interviewId, {
-            $set: {
-              currentStageIndex: stageInfo.stageIndex,
-              lastAskedQuestion: fallbackReply.split('\n')[1] || stage?.question || ''
-            }
-          });
-          return;
-        } catch (fallbackError) {
-          console.error('Fallback reply error:', fallbackError);
-        }
+        await Interview.findByIdAndUpdate(interviewId, {
+          $set: {
+            currentStageIndex: stageInfo.stageIndex,
+            lastAskedQuestion: fallbackReply.split('\n')[1] || stage?.question || ''
+          }
+        });
+        return;
+      } catch (fallbackError) {
+        console.error('Fallback reply error:', fallbackError);
       }
 
       socket.emit('error', { message: 'Unable to generate AI response right now. Please try again in a few seconds.' });
