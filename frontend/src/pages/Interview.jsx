@@ -41,16 +41,26 @@ function Interview() {
       speakText(data.message);
     });
 
-    socketRef.current.on('interview-ended', () => {
-      window.speechSynthesis?.cancel();
-      navigate('/history');
+    socketRef.current.on('error', (data) => {
+      const errorText = data?.message || 'Unable to generate response right now.';
+      setMessages(prev => [...prev, { role: 'ai', text: errorText }]);
+    });
+
+    socketRef.current.on('interview-ended', async () => {
+      try {
+        window.speechSynthesis?.cancel();
+        navigate('/history');
+      } catch {}
     });
 
     if ('webkitSpeechRecognition' in window) {
       const SpeechRecognition = window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.onresult = (e) => {
-        const transcript = e.results[0][0].transcript;
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+
+      recognitionRef.current.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
         setMessages(prev => [...prev, { role: 'user', text: transcript }]);
         socketRef.current.emit('user-message', { interviewId, message: transcript });
         setIsRecording(false);
@@ -62,15 +72,17 @@ function Interview() {
       socketRef.current?.disconnect();
       window.speechSynthesis?.cancel();
     };
-  }, [interviewId, navigate]);
+  }, [interviewId]);
 
   const speakText = (text) => {
-    if (isMutedRef.current || !('speechSynthesis' in window)) return;
+    if (isMutedRef.current) return;
+    if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.onstart = () => setIsAISpeaking(true);
-    u.onend = () => setIsAISpeaking(false);
-    window.speechSynthesis.speak(u);
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.95;
+    utterance.onstart = () => setIsAISpeaking(true);
+    utterance.onend = () => setIsAISpeaking(false);
+    window.speechSynthesis.speak(utterance);
   };
 
   const startRecording = () => {
@@ -79,8 +91,8 @@ function Interview() {
     try { recognitionRef.current.start(); } catch {}
   };
 
-  const sendText = () => {
-    if (!textInput.trim()) return;
+  const sendTextMessage = () => {
+    if (!textInput.trim() || !socketRef.current) return;
     setMessages(prev => [...prev, { role: 'user', text: textInput }]);
     socketRef.current.emit('user-message', { interviewId, message: textInput });
     setTextInput('');
@@ -89,112 +101,107 @@ function Interview() {
   const handleStop = async () => {
     try {
       await axios.post(`${API_BASE_URL}/api/interview/stop/${interviewId}`);
-    } catch {
-      // Fall through so the user can still leave the interview screen.
-    } finally {
-      try {
-        window.speechSynthesis?.cancel();
-        socketRef.current?.disconnect();
-      } catch {}
-
+      window.speechSynthesis?.cancel();
       navigate('/history');
+    } catch {}
+  };
+
+  const handleToggleMute = () => {
+    if (!isMuted) {
+      window.speechSynthesis?.cancel();
     }
+    setIsMuted(prev => !prev);
   };
 
   return (
     <div style={styles.container}>
-      <header style={styles.header} className="glass-panel">
-        <div style={styles.status}>
-          <div style={styles.dot}></div>
-          <span>Live</span>
+      <div style={styles.topBar} className="glass-panel">
+        <div style={styles.statusGroup}>
+          <div style={styles.recordingDot}></div>
+          <span style={styles.statusText}>Session Active</span>
         </div>
-        <div style={styles.actions}>
-          <button style={styles.btnSmall} onClick={() => setIsMuted(!isMuted)}>
-            {isMuted ? '🔇' : '🔊'}
+        <div style={styles.topActions}>
+          <button style={styles.muteBtn} onClick={handleToggleMute}>
+            {isMuted ? 'Unmute AI' : 'Mute AI'}
           </button>
-          <button style={styles.endBtn} onClick={handleStop}>Finish</button>
+          <button style={styles.endBtn} onClick={handleStop}>End Session</button>
         </div>
-      </header>
+      </div>
 
-      <main style={styles.content}>
-        <div style={styles.visualizer} className="glass-panel">
-          <div style={{...styles.avatar, borderColor: isAISpeaking ? 'var(--primary)' : 'transparent'}}>
-            AI
+      <div style={styles.mainArea}>
+        <div style={styles.visualizerPanel} className="glass-panel">
+          <div style={styles.avatarRing} className={isAISpeaking ? 'recording-pulse' : ''}>
+            <div style={styles.avatarInner}>AI</div>
           </div>
           <h2 style={styles.aiName}>Interviewer</h2>
-          <p style={styles.statusLabel}>{isAISpeaking ? 'Speaking' : 'Listening'}</p>
+          <p style={styles.aiStatus}>{isAISpeaking ? 'Speaking...' : 'Listening...'}</p>
         </div>
 
-        <div style={styles.chat} className="glass-panel">
-          <div style={styles.messages}>
-            {messages.map((msg, i) => (
-              <div key={i} style={{
-                ...styles.bubble, 
-                alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                background: msg.role === 'user' ? 'var(--primary)' : 'var(--surface-solid)',
-                color: msg.role === 'user' ? '#fff' : 'var(--text-primary)'
-              }}>
-                {msg.text}
+        <div style={styles.chatPanel} className="glass-panel">
+          <div style={styles.chatScroll}>
+            {messages.length === 0 && <div style={styles.emptyChat}>System initialized. Waiting for AI...</div>}
+            {messages.map((msg, idx) => (
+              <div key={idx} style={{...styles.msgBubble, alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start', background: msg.role === 'user' ? 'var(--primary)' : 'var(--surface-solid)', color: msg.role === 'user' ? '#fff' : 'var(--text-primary)', border: msg.role === 'user' ? 'none' : '1px solid var(--border)'}} className="animate-slide-up">
+                <div style={{...styles.msgLabel, color: msg.role === 'user' ? 'rgba(255,255,255,0.7)' : 'var(--text-secondary)'}}>
+                  {msg.role === 'user' ? 'You' : 'AI'}
+                </div>
+                <div style={styles.msgText}>{msg.text}</div>
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
 
-          <div style={styles.controls}>
-            <div style={styles.inputToggle}>
-              <button style={styles.modeBtn} onClick={() => setInputMode('voice')}>🎙️</button>
-              <button style={styles.modeBtn} onClick={() => setInputMode('text')}>⌨️</button>
+          <div style={styles.controlBox}>
+            <div style={styles.tabs}>
+              <button style={{...styles.tabBtn, opacity: inputMode === 'voice' ? 1 : 0.5}} onClick={() => setInputMode('voice')}>🎙️ Voice</button>
+              <button style={{...styles.tabBtn, opacity: inputMode === 'text' ? 1 : 0.5}} onClick={() => setInputMode('text')}>⌨️ Text</button>
             </div>
 
             {inputMode === 'voice' ? (
-              <button 
-                style={{...styles.micBtn, background: isRecording ? 'var(--danger)' : 'var(--primary)'}} 
-                onClick={startRecording}
-              >
-                {isRecording ? 'Listening...' : 'Push to Talk'}
+              <button style={{...styles.micBtn, background: isRecording ? 'var(--danger)' : 'var(--primary)'}} className={isRecording ? 'recording-pulse' : ''} onClick={startRecording} disabled={isRecording}>
+                {isRecording ? 'Recording...' : 'Tap to Speak'}
               </button>
             ) : (
               <div style={styles.inputRow}>
-                <input 
-                  style={styles.input} 
-                  value={textInput} 
-                  onChange={e => setTextInput(e.target.value)} 
-                  onKeyDown={e => e.key === 'Enter' && sendText()}
-                  placeholder="Message..."
-                />
-                <button style={styles.sendBtn} onClick={sendText}>Send</button>
+                <input type="text" value={textInput} onChange={e => setTextInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && sendTextMessage()} style={styles.chatInput} placeholder="Type response..." />
+                <button style={styles.sendBtn} onClick={sendTextMessage}>Send</button>
               </div>
             )}
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
 
 const styles = {
-  container: { height: '100vh', display: 'flex', flexDirection: 'column', padding: '16px', gap: '16px', background: '#f8fafc' },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 20px' },
-  status: { display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600' },
-  dot: { width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444' },
-  actions: { display: 'flex', gap: '10px' },
-  btnSmall: { background: '#f1f5f9', border: 'none', padding: '8px 12px', borderRadius: '8px' },
-  endBtn: { background: '#fef2f2', color: '#ef4444', border: 'none', padding: '8px 16px', borderRadius: '8px', fontWeight: '600' },
-  content: { display: 'flex', gap: '16px', flex: 1, overflow: 'hidden' },
-  visualizer: { width: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' },
-  avatar: { width: '100px', height: '100px', borderRadius: '50%', background: '#6366f1', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', fontWeight: 'bold', border: '4px solid transparent', transition: '0.3s' },
-  aiName: { marginTop: '16px', fontSize: '20px' },
-  statusLabel: { fontSize: '14px', color: '#64748b' },
-  chat: { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' },
-  messages: { flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' },
-  bubble: { maxWidth: '75%', padding: '12px 16px', borderRadius: '12px', fontSize: '15px' },
-  controls: { padding: '20px', borderTop: '1px solid #e2e8f0' },
-  inputToggle: { display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '16px' },
-  modeBtn: { background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer' },
-  micBtn: { width: '100%', maxWidth: '240px', margin: '0 auto', display: 'block', padding: '14px', borderRadius: '24px', color: '#fff', border: 'none', fontWeight: '600' },
-  inputRow: { display: 'flex', gap: '10px' },
-  input: { flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0' },
-  sendBtn: { background: '#6366f1', color: '#fff', border: 'none', padding: '0 20px', borderRadius: '8px', fontWeight: '600' }
+  container: { height: '100vh', display: 'flex', flexDirection: 'column', padding: '24px', gap: '24px', maxWidth: '1400px', margin: '0 auto' },
+  topBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px' },
+  topActions: { display: 'flex', alignItems: 'center', gap: '10px' },
+  statusGroup: { display: 'flex', alignItems: 'center', gap: '10px' },
+  recordingDot: { width: '10px', height: '10px', borderRadius: '50%', background: 'var(--danger)', boxShadow: '0 0 10px var(--danger)', animation: 'pulse-ring 2s infinite' },
+  statusText: { fontWeight: '600', color: 'var(--text-primary)' },
+  muteBtn: { background: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary)', border: '1px solid rgba(99, 102, 241, 0.25)', padding: '10px 14px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' },
+  endBtn: { background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '10px 20px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' },
+  mainArea: { display: 'flex', gap: '24px', flex: 1, overflow: 'hidden' },
+  visualizerPanel: { flex: '0 0 350px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '24px' },
+  avatarRing: { width: '150px', height: '150px', borderRadius: '50%', background: 'rgba(99, 102, 241, 0.1)', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '24px' },
+  avatarInner: { width: '120px', height: '120px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary), #a855f7)', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white', fontSize: '32px', fontWeight: '700', boxShadow: '0 10px 30px rgba(99,102,241,0.4)' },
+  aiName: { fontSize: '24px', fontWeight: '700', marginBottom: '8px' },
+  aiStatus: { color: 'var(--text-secondary)' },
+  chatPanel: { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' },
+  chatScroll: { flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' },
+  emptyChat: { margin: 'auto', color: 'var(--text-secondary)', fontStyle: 'italic' },
+  msgBubble: { maxWidth: '80%', padding: '16px', borderRadius: '16px', lineHeight: '1.6' },
+  msgLabel: { fontSize: '12px', fontWeight: '700', textTransform: 'uppercase', marginBottom: '6px' },
+  msgText: { fontSize: '15px' },
+  controlBox: { padding: '24px', borderTop: '1px solid var(--border)' },
+  tabs: { display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '20px' },
+  tabBtn: { background: 'transparent', border: 'none', color: 'var(--text-primary)', fontWeight: '600', fontSize: '16px', cursor: 'pointer', transition: 'opacity 0.2s' },
+  micBtn: { display: 'block', width: '100%', maxWidth: '300px', margin: '0 auto', padding: '16px', borderRadius: '30px', color: 'white', border: 'none', fontSize: '16px', fontWeight: '700', cursor: 'pointer', transition: 'all 0.3s' },
+  inputRow: { display: 'flex', gap: '12px' },
+  chatInput: { flex: 1, padding: '16px', borderRadius: '12px' },
+  sendBtn: { background: 'var(--primary)', color: 'white', border: 'none', padding: '0 24px', borderRadius: '12px', fontWeight: '600', cursor: 'pointer' }
 };
 
 export default Interview;
