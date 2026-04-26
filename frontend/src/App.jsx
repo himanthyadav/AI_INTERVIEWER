@@ -16,23 +16,23 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const ThemeToggle = () => {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { toggleTheme } = useContext(ThemeContext);
   return (
     <button onClick={toggleTheme} style={styles.themeToggle} className="app-theme-toggle">
-      {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+      ☀️ Light
     </button>
   );
 };
 
 function App() {
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('theme', 'light');
+  }, []);
 
-  const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  const toggleTheme = () => {};
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
@@ -66,17 +66,19 @@ const styles = {
     top: '20px',
     right: '20px',
     zIndex: 1000,
-    background: 'var(--surface)',
-    color: 'var(--text-primary)',
-    border: '1px solid var(--border)',
-    padding: '11px 18px',
+    background: '#ffffff',
+    color: '#6366f1',
+    borderTop:    '2px solid rgba(255,255,255,0.95)',
+    borderLeft:   '2px solid rgba(255,255,255,0.85)',
+    borderBottom: '2px solid rgba(99,102,241,0.22)',
+    borderRight:  '2px solid rgba(99,102,241,0.16)',
+    padding: '10px 18px',
     borderRadius: '30px',
-    cursor: 'pointer',
+    cursor: 'default',
     fontWeight: '700',
     fontSize: '15px',
-    backdropFilter: 'blur(10px)',
-    boxShadow: 'var(--glass-shadow)',
-    transition: 'all 0.3s ease'
+    boxShadow: '3px 3px 0 rgba(99,102,241,0.12), -2px -2px 0 rgba(255,255,255,0.95), 0 6px 18px rgba(99,102,241,0.10)',
+    transition: 'all 0.2s ease'
   },
   loaderWrapper: {
     display: 'flex',

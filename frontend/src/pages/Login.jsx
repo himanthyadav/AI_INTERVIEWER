@@ -60,99 +60,19 @@ function Login() {
 }
 
 const styles = {
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    padding: '20px'
-  },
-  card: {
-    width: '100%',
-    maxWidth: '440px',
-    padding: '40px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  logoCircle: {
-    width: '64px',
-    height: '64px',
-    background: 'linear-gradient(135deg, var(--primary), #a855f7)',
-    borderRadius: '16px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: '24px',
-    boxShadow: '0 10px 25px rgba(99, 102, 241, 0.4)'
-  },
-  title: {
-    fontSize: '28px',
-    fontWeight: '700',
-    marginBottom: '8px',
-    color: 'var(--text-primary)'
-  },
-  subtitle: {
-    fontSize: '15px',
-    color: 'var(--text-secondary)',
-    marginBottom: '32px'
-  },
-  form: {
-    width: '100%'
-  },
-  inputGroup: {
-    marginBottom: '20px',
-    width: '100%'
-  },
-  label: {
-    display: 'block',
-    marginBottom: '8px',
-    fontSize: '14px',
-    fontWeight: '500',
-    color: 'var(--text-primary)'
-  },
-  input: {
-    width: '100%',
-    padding: '14px 16px',
-    borderRadius: '12px',
-    fontSize: '15px',
-    transition: 'all 0.2s',
-  },
-  button: {
-    width: '100%',
-    padding: '16px',
-    background: 'var(--primary)',
-    color: 'white',
-    border: 'none',
-    borderRadius: '12px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    marginTop: '10px',
-    transition: 'background 0.2s',
-    boxShadow: '0 8px 20px rgba(99, 102, 241, 0.3)'
-  },
-  linkText: {
-    marginTop: '24px',
-    color: 'var(--text-secondary)',
-    fontSize: '14px'
-  },
-  link: {
-    color: 'var(--primary)',
-    textDecoration: 'none',
-    fontWeight: '600'
-  },
-  errorBanner: {
-    width: '100%',
-    padding: '12px',
-    background: 'rgba(239, 68, 68, 0.1)',
-    color: 'var(--danger)',
-    borderRadius: '8px',
-    marginBottom: '20px',
-    fontSize: '14px',
-    textAlign: 'center',
-    border: '1px solid rgba(239, 68, 68, 0.2)'
-  }
+  container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', padding: '20px' },
+  card: { width: '100%', maxWidth: '440px', padding: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center' },
+  logoCircle: { width: '64px', height: '64px', background: 'linear-gradient(135deg, #6366f1, #a855f7)', borderRadius: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '24px', boxShadow: '4px 4px 0 rgba(79,70,229,0.22), 0 10px 28px rgba(99,102,241,0.38)' },
+  title: { fontSize: '28px', fontWeight: '800', marginBottom: '8px', color: '#0f172a' },
+  subtitle: { fontSize: '15px', color: '#64748b', marginBottom: '32px' },
+  form: { width: '100%' },
+  inputGroup: { marginBottom: '20px', width: '100%' },
+  label: { display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#0f172a' },
+  input: { width: '100%', padding: '14px 16px', borderRadius: '12px', fontSize: '15px', transition: 'all 0.2s' },
+  button: { width: '100%', padding: '16px', background: 'linear-gradient(135deg, #6366f1, #7c3aed)', color: 'white', border: 'none', borderRadius: '12px', fontSize: '16px', fontWeight: '700', cursor: 'pointer', marginTop: '10px', boxShadow: '3px 3px 0 rgba(79,70,229,0.22), 0 8px 22px rgba(99,102,241,0.32)' },
+  linkText: { marginTop: '24px', color: '#64748b', fontSize: '14px' },
+  link: { color: '#6366f1', textDecoration: 'none', fontWeight: '700' },
+  errorBanner: { width: '100%', padding: '12px', background: 'rgba(239,68,68,0.08)', color: '#ef4444', borderRadius: '8px', marginBottom: '20px', fontSize: '14px', textAlign: 'center', borderTop: '2px solid rgba(255,255,255,0.9)', borderLeft: '2px solid rgba(255,255,255,0.8)', borderBottom: '2px solid rgba(239,68,68,0.28)', borderRight: '2px solid rgba(239,68,68,0.2)' }
 };
 
 export default Login;

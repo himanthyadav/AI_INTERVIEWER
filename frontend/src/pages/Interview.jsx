@@ -141,7 +141,7 @@ function Interview() {
           <div style={styles.chatScroll}>
             {messages.length === 0 && <div style={styles.emptyChat}>System initialized. Waiting for AI...</div>}
             {messages.map((msg, idx) => (
-              <div key={idx} style={{...styles.msgBubble, alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start', background: msg.role === 'user' ? 'var(--primary)' : 'var(--surface-solid)', color: msg.role === 'user' ? '#fff' : 'var(--text-primary)', border: msg.role === 'user' ? 'none' : '1px solid var(--border)'}} className="animate-slide-up">
+              <div key={idx} style={{...styles.msgBubble, alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start', background: msg.role === 'user' ? 'linear-gradient(135deg, #6366f1, #7c3aed)' : '#ffffff', color: msg.role === 'user' ? '#fff' : '#0f172a', borderTop: msg.role === 'user' ? 'none' : '2px solid rgba(255,255,255,0.95)', borderLeft: msg.role === 'user' ? 'none' : '2px solid rgba(255,255,255,0.85)', borderBottom: msg.role === 'user' ? 'none' : '2px solid rgba(99,102,241,0.18)', borderRight: msg.role === 'user' ? 'none' : '2px solid rgba(99,102,241,0.12)', boxShadow: msg.role === 'user' ? '3px 3px 0 rgba(79,70,229,0.22), 0 6px 18px rgba(99,102,241,0.28)' : '2px 2px 0 rgba(99,102,241,0.08), 0 4px 12px rgba(99,102,241,0.07)'}} className="animate-slide-up">
                 <div style={{...styles.msgLabel, color: msg.role === 'user' ? 'rgba(255,255,255,0.7)' : 'var(--text-secondary)'}}>
                   {msg.role === 'user' ? 'You' : 'AI'}
                 </div>
@@ -179,29 +179,29 @@ const styles = {
   topBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px' },
   topActions: { display: 'flex', alignItems: 'center', gap: '10px' },
   statusGroup: { display: 'flex', alignItems: 'center', gap: '10px' },
-  recordingDot: { width: '10px', height: '10px', borderRadius: '50%', background: 'var(--danger)', boxShadow: '0 0 10px var(--danger)', animation: 'pulse-ring 2s infinite' },
-  statusText: { fontWeight: '600', color: 'var(--text-primary)' },
-  muteBtn: { background: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary)', border: '1px solid rgba(99, 102, 241, 0.25)', padding: '10px 14px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' },
-  endBtn: { background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '10px 20px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' },
+  recordingDot: { width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444', boxShadow: '0 0 10px rgba(239,68,68,0.6)', animation: 'pulse-ring 2s infinite' },
+  statusText: { fontWeight: '600', color: '#0f172a' },
+  muteBtn: { background: 'rgba(99,102,241,0.08)', color: '#6366f1', borderTop: '2px solid rgba(255,255,255,0.9)', borderLeft: '2px solid rgba(255,255,255,0.8)', borderBottom: '2px solid rgba(99,102,241,0.22)', borderRight: '2px solid rgba(99,102,241,0.16)', padding: '10px 14px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', boxShadow: '2px 2px 0 rgba(99,102,241,0.1)' },
+  endBtn: { background: 'rgba(239,68,68,0.08)', color: '#ef4444', borderTop: '2px solid rgba(255,255,255,0.9)', borderLeft: '2px solid rgba(255,255,255,0.8)', borderBottom: '2px solid rgba(239,68,68,0.28)', borderRight: '2px solid rgba(239,68,68,0.2)', padding: '10px 20px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', boxShadow: '2px 2px 0 rgba(239,68,68,0.1)' },
   mainArea: { display: 'flex', gap: '24px', flex: 1, overflow: 'hidden' },
   visualizerPanel: { flex: '0 0 350px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '24px' },
-  avatarRing: { width: '150px', height: '150px', borderRadius: '50%', background: 'rgba(99, 102, 241, 0.1)', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '24px' },
-  avatarInner: { width: '120px', height: '120px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary), #a855f7)', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white', fontSize: '32px', fontWeight: '700', boxShadow: '0 10px 30px rgba(99,102,241,0.4)' },
-  aiName: { fontSize: '24px', fontWeight: '700', marginBottom: '8px' },
-  aiStatus: { color: 'var(--text-secondary)' },
+  avatarRing: { width: '150px', height: '150px', borderRadius: '50%', background: 'rgba(99,102,241,0.08)', borderTop: '3px solid rgba(255,255,255,0.95)', borderLeft: '3px solid rgba(255,255,255,0.85)', borderBottom: '3px solid rgba(99,102,241,0.3)', borderRight: '3px solid rgba(99,102,241,0.2)', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '24px', boxShadow: '4px 4px 0 rgba(99,102,241,0.12), 0 10px 28px rgba(99,102,241,0.12)' },
+  avatarInner: { width: '120px', height: '120px', borderRadius: '50%', background: 'linear-gradient(135deg, #6366f1, #a855f7)', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white', fontSize: '32px', fontWeight: '700', boxShadow: '0 10px 30px rgba(99,102,241,0.4)' },
+  aiName: { fontSize: '24px', fontWeight: '700', marginBottom: '8px', color: '#0f172a' },
+  aiStatus: { color: '#64748b' },
   chatPanel: { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' },
   chatScroll: { flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' },
-  emptyChat: { margin: 'auto', color: 'var(--text-secondary)', fontStyle: 'italic' },
+  emptyChat: { margin: 'auto', color: '#64748b', fontStyle: 'italic' },
   msgBubble: { maxWidth: '80%', padding: '16px', borderRadius: '16px', lineHeight: '1.6' },
   msgLabel: { fontSize: '12px', fontWeight: '700', textTransform: 'uppercase', marginBottom: '6px' },
   msgText: { fontSize: '15px' },
-  controlBox: { padding: '24px', borderTop: '1px solid var(--border)' },
+  controlBox: { padding: '24px', borderTop: '1px solid rgba(99,102,241,0.12)' },
   tabs: { display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '20px' },
-  tabBtn: { background: 'transparent', border: 'none', color: 'var(--text-primary)', fontWeight: '600', fontSize: '16px', cursor: 'pointer', transition: 'opacity 0.2s' },
-  micBtn: { display: 'block', width: '100%', maxWidth: '300px', margin: '0 auto', padding: '16px', borderRadius: '30px', color: 'white', border: 'none', fontSize: '16px', fontWeight: '700', cursor: 'pointer', transition: 'all 0.3s' },
+  tabBtn: { background: 'transparent', border: 'none', color: '#0f172a', fontWeight: '600', fontSize: '16px', cursor: 'pointer', transition: 'opacity 0.2s' },
+  micBtn: { display: 'block', width: '100%', maxWidth: '300px', margin: '0 auto', padding: '16px', borderRadius: '30px', color: 'white', border: 'none', fontSize: '16px', fontWeight: '700', cursor: 'pointer', boxShadow: '3px 3px 0 rgba(79,70,229,0.25), 0 6px 18px rgba(99,102,241,0.3)', transition: 'all 0.3s' },
   inputRow: { display: 'flex', gap: '12px' },
   chatInput: { flex: 1, padding: '16px', borderRadius: '12px' },
-  sendBtn: { background: 'var(--primary)', color: 'white', border: 'none', padding: '0 24px', borderRadius: '12px', fontWeight: '600', cursor: 'pointer' }
+  sendBtn: { background: 'linear-gradient(135deg, #6366f1, #7c3aed)', color: 'white', border: 'none', padding: '0 24px', borderRadius: '12px', fontWeight: '600', cursor: 'pointer', boxShadow: '2px 2px 0 rgba(79,70,229,0.2)' }
 };
 
 export default Interview;
