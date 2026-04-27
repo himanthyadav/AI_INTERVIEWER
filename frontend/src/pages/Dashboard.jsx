@@ -31,7 +31,7 @@ function Dashboard() {
   });
 
   const rounds = ['Warm Up', 'Technical', 'Behavioral'];
-  const durations = ['5 mins', '15 mins', '30 mins'];
+  const durations = ['1 min', '5 mins', '15 mins', '30 mins'];
   const interviewers = [
     { name: 'Ira', type: 'IN Accent', icon: 'Ira' },
     { name: 'Kapil', type: 'IN Accent', icon: 'Kapil' },
@@ -143,7 +143,8 @@ function Dashboard() {
         userId: user.id,
         position: interviewData.position,
         experience: interviewData.experience,
-        difficulty: interviewData.round
+        difficulty: interviewData.round,
+        duration: interviewData.duration
       });
       navigate(`/interview/${response.data.interviewId}`);
     } catch {

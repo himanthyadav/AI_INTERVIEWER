@@ -18,6 +18,10 @@ const interviewSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  duration: {
+    type: String,
+    default: '15 mins'
+  },
   isStart: {
     type: Boolean,
     default: false

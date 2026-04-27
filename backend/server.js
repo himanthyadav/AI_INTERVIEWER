@@ -587,13 +587,14 @@ app.patch('/api/user/:userId/profile', async (req, res) => {
 // 4. Start Interview API
 app.post('/api/interview/start', async (req, res) => {
   try {
-    const { userId, position, experience, difficulty } = req.body;
+    const { userId, position, experience, difficulty, duration } = req.body;
     
     const interview = new Interview({
       userId,
       position,
       experience,
       difficulty,
+      duration: duration || '15 mins',
       isStart: true,
       currentStageIndex: -1,
       lastAskedQuestion: '',
@@ -606,6 +607,21 @@ app.post('/api/interview/start', async (req, res) => {
       message: 'Interview started',
       interviewId: interview._id 
     });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// 4.1 Get Interview By ID API
+app.get('/api/interview/:interviewId', async (req, res) => {
+  try {
+    const interview = await Interview.findById(req.params.interviewId).select('position experience difficulty duration isStart currentStageIndex lastAskedQuestion chatTranscript createdAt');
+
+    if (!interview) {
+      return res.status(404).json({ message: 'Interview not found' });
+    }
+
+    res.json({ interview });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

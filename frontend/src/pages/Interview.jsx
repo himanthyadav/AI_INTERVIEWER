@@ -14,11 +14,43 @@ function Interview() {
   const [textInput, setTextInput] = useState('');
   const [isAISpeaking, setIsAISpeaking] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(15 * 60);
+  const [isEnding, setIsEnding] = useState(false);
   
   const socketRef = useRef(null);
   const recognitionRef = useRef(null);
   const messagesEndRef = useRef(null);
   const isMutedRef = useRef(false);
+  const stopRequestedRef = useRef(false);
+
+  const parseDurationToSeconds = (durationText) => {
+    const normalized = String(durationText || '').toLowerCase().trim();
+
+    if (normalized.includes('1 min')) return 60;
+    if (normalized.includes('5 mins')) return 5 * 60;
+    if (normalized.includes('15 mins')) return 15 * 60;
+    if (normalized.includes('30 mins')) return 30 * 60;
+
+    return 15 * 60;
+  };
+
+  const formatTime = (totalSeconds) => {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${String(seconds).padStart(2, '0')}`;
+  };
+
+  const handleAutoStop = async () => {
+    if (isEnding) return;
+
+    setIsEnding(true);
+    try {
+      await axios.post(`${API_BASE_URL}/api/interview/stop/${interviewId}`);
+    } catch {}
+
+    window.speechSynthesis?.cancel();
+    navigate('/history');
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -74,6 +106,41 @@ function Interview() {
     };
   }, [interviewId]);
 
+  useEffect(() => {
+    const loadInterview = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/interview/${interviewId}`);
+        const interview = response.data?.interview;
+        setTimeLeft(parseDurationToSeconds(interview?.duration));
+      } catch {
+        setTimeLeft(15 * 60);
+      }
+    };
+
+    loadInterview();
+  }, [interviewId]);
+
+  useEffect(() => {
+    if (isEnding || timeLeft <= 0) return undefined;
+
+    const timerId = window.setInterval(() => {
+      setTimeLeft((current) => {
+        if (current <= 1) {
+          window.clearInterval(timerId);
+          if (!stopRequestedRef.current) {
+            stopRequestedRef.current = true;
+            handleAutoStop();
+          }
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timerId);
+  }, [timeLeft, isEnding]);
+
   const speakText = (text) => {
     if (isMutedRef.current) return;
     if (!('speechSynthesis' in window)) return;
@@ -99,11 +166,16 @@ function Interview() {
   };
 
   const handleStop = async () => {
+    if (isEnding) return;
+
+    stopRequestedRef.current = true;
+    setIsEnding(true);
     try {
       await axios.post(`${API_BASE_URL}/api/interview/stop/${interviewId}`);
-      window.speechSynthesis?.cancel();
-      navigate('/history');
     } catch {}
+
+    window.speechSynthesis?.cancel();
+    navigate('/history');
   };
 
   const handleToggleMute = () => {
@@ -121,6 +193,7 @@ function Interview() {
           <span style={styles.statusText}>Session Active</span>
         </div>
         <div style={styles.topActions}>
+          <div style={styles.timerPill}>{formatTime(timeLeft)}</div>
           <button style={styles.muteBtn} onClick={handleToggleMute}>
             {isMuted ? 'Unmute AI' : 'Mute AI'}
           </button>
@@ -189,6 +262,7 @@ const styles = {
   container: { height: '100vh', display: 'flex', flexDirection: 'column', padding: '24px', gap: '24px', maxWidth: '1400px', margin: '0 auto' },
   topBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px' },
   topActions: { display: 'flex', alignItems: 'center', gap: '10px' },
+  timerPill: { minWidth: '76px', textAlign: 'center', padding: '9px 14px', borderRadius: '999px', background: 'rgba(91,93,246,0.10)', color: 'var(--primary)', fontWeight: '800', fontSize: '14px', boxShadow: '3px 3px 0 rgba(91,93,246,0.12)' },
   statusGroup: { display: 'flex', alignItems: 'center', gap: '10px' },
   recordingDot: { width: '10px', height: '10px', borderRadius: '50%', background: 'var(--danger)', boxShadow: '0 0 10px rgba(239,68,68,0.6)', animation: 'pulse-ring 2s infinite' },
   statusText: { fontWeight: '600', color: 'var(--text-primary)' },
