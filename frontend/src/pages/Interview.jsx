@@ -163,7 +163,18 @@ function Interview() {
               </button>
             ) : (
               <div style={styles.inputRow}>
-                <input type="text" value={textInput} onChange={e => setTextInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && sendTextMessage()} style={styles.chatInput} placeholder="Type response..." />
+                <input
+                  type="text"
+                  value={textInput}
+                  onChange={e => setTextInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && sendTextMessage()}
+                  style={styles.chatInput}
+                  placeholder="Type your answer..."
+                  autoCorrect="on"
+                  spellCheck="true"
+                  autoCapitalize="sentences"
+                  autoComplete="off"
+                />
                 <button style={styles.sendBtn} onClick={sendTextMessage}>Send</button>
               </div>
             )}
