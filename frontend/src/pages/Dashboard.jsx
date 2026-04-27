@@ -233,6 +233,39 @@ function Dashboard() {
               <p style={styles.mainSubtitle}>Choose role, level, and round.</p>
             </div>
 
+            <div style={styles.overviewGrid}>
+              <div style={styles.overviewCard} className="glass-panel animate-slide-up">
+                <h3 style={styles.overviewTitle}>How to continue</h3>
+                <div style={styles.stepList}>
+                  <div style={styles.stepItem}><span style={styles.stepNumber}>1</span><p style={styles.stepText}>Set your role, experience, round, and time.</p></div>
+                  <div style={styles.stepItem}><span style={styles.stepNumber}>2</span><p style={styles.stepText}>Pick a coach and accept recording.</p></div>
+                  <div style={styles.stepItem}><span style={styles.stepNumber}>3</span><p style={styles.stepText}>Run the quick device check.</p></div>
+                  <div style={styles.stepItem}><span style={styles.stepNumber}>4</span><p style={styles.stepText}>Start the interview and review the report later.</p></div>
+                </div>
+              </div>
+
+              <div style={{ ...styles.overviewCard, animationDelay: '0.08s' }} className="glass-panel animate-slide-up">
+                <h3 style={styles.overviewTitle}>What this site is for</h3>
+                <p style={styles.overviewText}>This platform helps you practice realistic mock interviews with guidance, instant checks, and feedback you can review later.</p>
+                <div style={styles.infoBlock}>
+                  <h4 style={styles.infoBlockTitle}>Objectives</h4>
+                  <ul style={styles.infoList}>
+                    <li style={styles.infoListItem}>Build confidence before real interviews.</li>
+                    <li style={styles.infoListItem}>Practice role-specific questions.</li>
+                    <li style={styles.infoListItem}>Track progress through history and reports.</li>
+                  </ul>
+                </div>
+                <div style={styles.infoBlock}>
+                  <h4 style={styles.infoBlockTitle}>How it differs</h4>
+                  <ul style={styles.infoList}>
+                    <li style={styles.infoListItem}>Focused on interview simulation, not generic chat.</li>
+                    <li style={styles.infoListItem}>Includes setup, diagnostics, voice, and text input.</li>
+                    <li style={styles.infoListItem}>Saves sessions so you can compare your improvement.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
             <div style={styles.configCard} className="glass-panel animate-slide-up">
               <h3 style={styles.configTitle}>Setup</h3>
               <div style={styles.grid2}>
@@ -404,6 +437,18 @@ const styles = {
   heroBadge: { display: 'inline-block', marginBottom: '14px', fontSize: '13px', letterSpacing: '1px', textTransform: 'uppercase', background: 'rgba(99,102,241,0.1)', color: '#6366f1', borderTop: '1px solid rgba(255,255,255,0.9)', borderLeft: '1px solid rgba(255,255,255,0.8)', borderBottom: '1px solid rgba(99,102,241,0.2)', borderRight: '1px solid rgba(99,102,241,0.15)', borderRadius: '999px', padding: '7px 14px', fontWeight: '800', boxShadow: '1px 1px 0 rgba(99,102,241,0.1)' },
   mainTitle: { fontSize: 'clamp(2.3rem, 4vw, 4rem)', lineHeight: 1.08, fontWeight: '800', marginBottom: '12px', color: '#0f172a' },
   mainSubtitle: { color: '#64748b', fontSize: 'clamp(1rem, 1.4vw, 1.2rem)', maxWidth: '760px', margin: '0 auto 8px auto', lineHeight: 1.7 },
+  overviewGrid: { display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '18px', marginBottom: '24px' },
+  overviewCard: { padding: '24px', display: 'flex', flexDirection: 'column', gap: '14px' },
+  overviewTitle: { margin: 0, fontSize: '22px', color: '#0f172a', fontWeight: '800' },
+  overviewText: { margin: 0, color: '#64748b', fontSize: '15px', lineHeight: 1.7 },
+  stepList: { display: 'grid', gap: '10px' },
+  stepItem: { display: 'flex', gap: '12px', alignItems: 'flex-start' },
+  stepNumber: { width: '28px', height: '28px', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: 'linear-gradient(135deg, #6366f1, #7c3aed)', color: 'white', fontWeight: '800', fontSize: '13px', boxShadow: '3px 3px 0 rgba(99,102,241,0.18)' },
+  stepText: { margin: 0, color: '#0f172a', fontSize: '15px', lineHeight: 1.6 },
+  infoBlock: { display: 'flex', flexDirection: 'column', gap: '10px' },
+  infoBlockTitle: { margin: 0, color: '#0f172a', fontSize: '16px', fontWeight: '800' },
+  infoList: { margin: 0, paddingLeft: '18px', display: 'grid', gap: '8px' },
+  infoListItem: { color: '#64748b', fontSize: '14px', lineHeight: 1.6 },
   configCard: { padding: '30px' },
   configTitle: { fontSize: '24px', marginBottom: '20px', color: '#0f172a', fontWeight: '800' },
   grid2: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '22px', marginBottom: '24px' },
