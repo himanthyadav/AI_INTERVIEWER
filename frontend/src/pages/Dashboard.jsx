@@ -333,29 +333,31 @@ function Dashboard() {
               </div>
 
               <div style={{ ...styles.overviewCard, animationDelay: '0.08s' }} className="glass-panel animate-slide-up">
-                <h3 style={styles.overviewTitle}>Features</h3>
-                <p style={styles.overviewText}>This dashboard brings together the full interview flow in one place so you can prepare, practice, and review without switching tools.</p>
+                <h3 style={styles.overviewTitle}>Unique features</h3>
+                <p style={styles.overviewText}>This app is designed to feel more like a personal interview coach than a simple question bot.</p>
                 <div style={styles.infoBlock}>
                   <h4 style={styles.infoBlockTitle}>What you get</h4>
                   <ul style={styles.infoList}>
-                    <li style={styles.infoListItem}>Role-based mock interview setup.</li>
-                    <li style={styles.infoListItem}>Voice and text response modes.</li>
-                    <li style={styles.infoListItem}>Mic, camera, and audio checks before starting.</li>
-                    <li style={styles.infoListItem}>History and report tracking after each session.</li>
+                    <li style={styles.infoListItem}>Interview memory across sessions to track weak topics and repeated mistakes.</li>
+                    <li style={styles.infoListItem}>Weakness-to-practice roadmap with next-step improvement tasks.</li>
+                    <li style={styles.infoListItem}>Live answer rewrite support for clearer, more structured responses.</li>
+                    <li style={styles.infoListItem}>Company-style interview modes such as startup, MNC, product-based, HR-heavy, or technical-heavy.</li>
+                    <li style={styles.infoListItem}>Confidence and filler-word analytics for speaking-style feedback.</li>
+                    <li style={styles.infoListItem}>Interview replay timeline to review question flow, pauses, and score changes.</li>
                   </ul>
                 </div>
               </div>
 
               <div style={{ ...styles.overviewCard, animationDelay: '0.16s' }} className="glass-panel animate-slide-up">
                 <h3 style={styles.overviewTitle}>Why it is different</h3>
-                <p style={styles.overviewText}>Most AI interviewer tools only ask questions. This one also helps you prepare and improve with a guided flow and session tracking.</p>
+                <p style={styles.overviewText}>Most AI interviewer platforms stop at asking questions and giving a score. This one keeps helping after the session ends.</p>
                 <div style={styles.infoBlock}>
-                  <h4 style={styles.infoBlockTitle}>Standout points</h4>
+                  <h4 style={styles.infoBlockTitle}>Compared with other platforms</h4>
                   <ul style={styles.infoList}>
-                    <li style={styles.infoListItem}>Not just a chat bot, but a complete mock interview workflow.</li>
-                    <li style={styles.infoListItem}>Saves performance history so progress is visible over time.</li>
-                    <li style={styles.infoListItem}>Supports both speaking practice and typed answers.</li>
-                    <li style={styles.infoListItem}>Focuses on interview readiness instead of casual conversation.</li>
+                    <li style={styles.infoListItem}>Remembers your progress across sessions instead of treating every interview as a one-time chat.</li>
+                    <li style={styles.infoListItem}>Turns feedback into a roadmap, not just a score card.</li>
+                    <li style={styles.infoListItem}>Gives answer rewrite help and speaking analytics, which most platforms skip.</li>
+                    <li style={styles.infoListItem}>Supports replay and review so improvement is visible, not hidden.</li>
                   </ul>
                 </div>
               </div>
