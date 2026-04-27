@@ -73,6 +73,12 @@ body::after {
   border-bottom: 2px solid var(--border-bottom);
   border-right:  2px solid var(--border-right);
   box-shadow: 0 18px 38px rgba(91,93,246,0.12), 4px 4px 0 rgba(91,93,246,0.10), -2px -2px 0 rgba(255,255,255,0.8);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+
+.glass-panel:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 22px 46px rgba(91,93,246,0.15), 6px 6px 0 rgba(91,93,246,0.12), -2px -2px 0 rgba(255,255,255,0.85);
 }
 
 input, select, textarea {
@@ -111,7 +117,7 @@ button {
 }
 
 button:hover {
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1.02);
   filter: saturate(1.06);
   box-shadow: 4px 4px 0 rgba(91,93,246,0.15), 0 14px 24px rgba(91,93,246,0.12);
 }

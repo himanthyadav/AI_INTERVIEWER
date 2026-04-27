@@ -212,8 +212,8 @@ function Dashboard() {
           <nav style={styles.nav} className="glass-panel">
             <div style={styles.navLeft}>
               <div style={styles.navBrand}>
-                <h2 style={styles.navTitle}>AI Interview Preparation Studio</h2>
-                <p style={styles.navSubtitle}>Role-specific practice with instant feedback reports.</p>
+                <h2 style={styles.navTitle}>AI Interview Studio</h2>
+                <p style={styles.navSubtitle}>Fast mock sessions.</p>
               </div>
               <div style={styles.navLinks}>
                 <button style={styles.navLinkBtn} onClick={() => navigate('/dashboard')}>Dashboard</button>
@@ -228,16 +228,16 @@ function Dashboard() {
 
           <div style={styles.mainLayout}>
             <div style={styles.headerArea}>
-              <span style={styles.heroBadge}>3000+ role scenarios available</span>
-              <h1 style={styles.mainTitle}>Role-Specific AI Mock Interviews</h1>
-              <p style={styles.mainSubtitle}>Pick a role, customize your setup, and enter a guided mock interview in seconds.</p>
+              <span style={styles.heroBadge}>3000+ roles</span>
+              <h1 style={styles.mainTitle}>AI Mock Interviews</h1>
+              <p style={styles.mainSubtitle}>Choose role, level, and round.</p>
             </div>
 
             <div style={styles.configCard} className="glass-panel animate-slide-up">
-              <h3 style={styles.configTitle}>Session Configuration</h3>
+              <h3 style={styles.configTitle}>Setup</h3>
               <div style={styles.grid2}>
                 <div style={styles.inputWrapper}>
-                  <label style={styles.label}>Target Role</label>
+                  <label style={styles.label}>Role</label>
                   <input
                     type="text"
                     value={interviewData.position}
@@ -246,7 +246,7 @@ function Dashboard() {
                   />
                 </div>
                 <div style={styles.inputWrapper}>
-                  <label style={styles.label}>Experience Level</label>
+                  <label style={styles.label}>Experience</label>
                   <select
                     value={interviewData.experience}
                     onChange={(e) => setInterviewData({ ...interviewData, experience: e.target.value })}
@@ -260,7 +260,7 @@ function Dashboard() {
               </div>
 
               <div style={styles.section}>
-                <label style={styles.label}>Interview Round</label>
+                <label style={styles.label}>Round</label>
                 <div style={styles.chipGroup}>
                   {rounds.map(r => (
                     <button
@@ -275,7 +275,7 @@ function Dashboard() {
               </div>
 
               <div style={styles.section}>
-                <label style={styles.label}>Duration</label>
+                <label style={styles.label}>Time</label>
                 <div style={styles.chipGroup}>
                   {durations.map(d => (
                     <button
@@ -290,7 +290,7 @@ function Dashboard() {
               </div>
 
               <div style={styles.section}>
-                <label style={styles.label}>Select Persona</label>
+                <label style={styles.label}>Coach</label>
                 <div style={styles.personaGrid}>
                   {interviewers.map(i => (
                     <div
@@ -315,7 +315,7 @@ function Dashboard() {
                     checked={interviewData.termsAccepted}
                     onChange={(e) => setInterviewData({ ...interviewData, termsAccepted: e.target.checked })}
                   />
-                  <span style={styles.checkboxText}>I accept the session recording policies.</span>
+                  <span style={styles.checkboxText}>I accept recording.</span>
                 </label>
                 <button style={styles.launchBtn} onClick={handlePrerequisiteOpen}>Launch Environment</button>
               </div>
@@ -391,7 +391,7 @@ const styles = {
   navLeft: { display: 'flex', gap: '18px', alignItems: 'center', flexWrap: 'wrap' },
   navBrand: { display: 'flex', flexDirection: 'column', gap: '4px' },
   navTitle: { margin: 0, fontSize: '24px', color: '#0f172a', fontWeight: '800' },
-  navSubtitle: { margin: 0, color: '#64748b', fontSize: '15px' },
+  navSubtitle: { margin: 0, color: '#64748b', fontSize: '14px' },
   navLinks: { display: 'flex', gap: '8px', flexWrap: 'wrap' },
   navLinkBtn: { borderTop: '2px solid rgba(255,255,255,0.95)', borderLeft: '2px solid rgba(255,255,255,0.85)', borderBottom: '2px solid rgba(99,102,241,0.18)', borderRight: '2px solid rgba(99,102,241,0.12)', background: '#fff', color: '#0f172a', borderRadius: '999px', padding: '9px 15px', fontWeight: '700', fontSize: '14px', cursor: 'pointer', boxShadow: '2px 2px 0 rgba(99,102,241,0.08)', transition: 'all 0.2s' },
   navRight: { marginLeft: 'auto' },
