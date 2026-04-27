@@ -322,8 +322,14 @@ function Dashboard() {
             </div>
 
             <div style={styles.overviewGrid}>
-              <div style={styles.overviewCard} className="glass-panel animate-slide-up">
-                <h3 style={styles.overviewTitle}>How to continue</h3>
+              <div style={{ ...styles.overviewCard, ...styles.overviewCardHighlight }} className="glass-panel animate-slide-up">
+                <div style={styles.sectionHeader}>
+                  <span style={styles.sectionBadge}>01</span>
+                  <div>
+                    <h3 style={styles.overviewTitle}>How to continue</h3>
+                    <p style={styles.sectionSubtitle}>Follow this flow during class or while demonstrating the app.</p>
+                  </div>
+                </div>
                 <div style={styles.stepList}>
                   <div style={styles.stepItem}><span style={styles.stepNumber}>1</span><p style={styles.stepText}>Set your role, experience, round, and time.</p></div>
                   <div style={styles.stepItem}><span style={styles.stepNumber}>2</span><p style={styles.stepText}>Pick a coach and accept recording.</p></div>
@@ -332,8 +338,14 @@ function Dashboard() {
                 </div>
               </div>
 
-              <div style={{ ...styles.overviewCard, animationDelay: '0.08s' }} className="glass-panel animate-slide-up">
-                <h3 style={styles.overviewTitle}>Unique features</h3>
+              <div style={{ ...styles.overviewCard, ...styles.overviewCardHighlight, animationDelay: '0.08s' }} className="glass-panel animate-slide-up">
+                <div style={styles.sectionHeader}>
+                  <span style={styles.sectionBadge}>02</span>
+                  <div>
+                    <h3 style={styles.overviewTitle}>Unique features</h3>
+                    <p style={styles.sectionSubtitle}>These are the parts that make your project stand out.</p>
+                  </div>
+                </div>
                 <p style={styles.overviewText}>This app is designed to feel more like a personal interview coach than a simple question bot.</p>
                 <div style={styles.infoBlock}>
                   <h4 style={styles.infoBlockTitle}>What you get</h4>
@@ -348,8 +360,14 @@ function Dashboard() {
                 </div>
               </div>
 
-              <div style={{ ...styles.overviewCard, animationDelay: '0.16s' }} className="glass-panel animate-slide-up">
-                <h3 style={styles.overviewTitle}>Why it is different</h3>
+              <div style={{ ...styles.overviewCard, ...styles.overviewCardHighlight, animationDelay: '0.16s' }} className="glass-panel animate-slide-up">
+                <div style={styles.sectionHeader}>
+                  <span style={styles.sectionBadge}>03</span>
+                  <div>
+                    <h3 style={styles.overviewTitle}>Why it is different</h3>
+                    <p style={styles.sectionSubtitle}>Use this part to explain it clearly in class.</p>
+                  </div>
+                </div>
                 <p style={styles.overviewText}>Most AI interviewer platforms stop at asking questions and giving a score. This one keeps helping after the session ends.</p>
                 <div style={styles.infoBlock}>
                   <h4 style={styles.infoBlockTitle}>Compared with other platforms</h4>
@@ -446,8 +464,12 @@ const styles = {
   heroBadge: { display: 'inline-block', marginBottom: '14px', fontSize: '13px', letterSpacing: '1px', textTransform: 'uppercase', background: 'rgba(99,102,241,0.1)', color: '#6366f1', borderTop: '1px solid rgba(255,255,255,0.9)', borderLeft: '1px solid rgba(255,255,255,0.8)', borderBottom: '1px solid rgba(99,102,241,0.2)', borderRight: '1px solid rgba(99,102,241,0.15)', borderRadius: '999px', padding: '7px 14px', fontWeight: '800', boxShadow: '1px 1px 0 rgba(99,102,241,0.1)' },
   mainTitle: { fontSize: 'clamp(2.3rem, 4vw, 4rem)', lineHeight: 1.08, fontWeight: '800', marginBottom: '12px', color: '#0f172a' },
   mainSubtitle: { color: '#64748b', fontSize: 'clamp(1rem, 1.4vw, 1.2rem)', maxWidth: '760px', margin: '0 auto 8px auto', lineHeight: 1.7 },
-  overviewGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '18px', marginTop: '24px', marginBottom: '24px' },
-  overviewCard: { padding: '24px', display: 'flex', flexDirection: 'column', gap: '14px' },
+  overviewGrid: { display: 'grid', gridTemplateColumns: '1fr', gap: '18px', marginTop: '24px', marginBottom: '24px' },
+  overviewCard: { padding: '28px', display: 'flex', flexDirection: 'column', gap: '16px' },
+  overviewCardHighlight: { position: 'relative', overflow: 'hidden' },
+  sectionHeader: { display: 'flex', alignItems: 'flex-start', gap: '14px' },
+  sectionBadge: { width: '44px', height: '44px', borderRadius: '14px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: 'linear-gradient(135deg, #6366f1, #7c3aed)', color: 'white', fontWeight: '800', fontSize: '15px', boxShadow: '4px 4px 0 rgba(99,102,241,0.16)' },
+  sectionSubtitle: { margin: '4px 0 0', color: '#64748b', fontSize: '14px', lineHeight: 1.5 },
   overviewTitle: { margin: 0, fontSize: '22px', color: '#0f172a', fontWeight: '800' },
   overviewText: { margin: 0, color: '#64748b', fontSize: '15px', lineHeight: 1.7 },
   stepList: { display: 'grid', gap: '10px' },
