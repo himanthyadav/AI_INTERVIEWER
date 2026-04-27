@@ -69,16 +69,16 @@ function Signup() {
 const styles = {
   container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', padding: '20px' },
   card: { width: '100%', maxWidth: '500px', padding: '40px', display: 'flex', flexDirection: 'column' },
-  title: { fontSize: '28px', fontWeight: '800', marginBottom: '8px', color: '#0f172a' },
-  subtitle: { fontSize: '15px', color: '#64748b', marginBottom: '32px' },
+  title: { fontSize: '28px', fontWeight: '800', marginBottom: '8px', color: 'var(--text-primary)' },
+  subtitle: { fontSize: '15px', color: 'var(--text-secondary)', marginBottom: '32px' },
   form: { width: '100%' },
   row: { display: 'flex', gap: '16px' },
   inputGroup: { marginBottom: '20px', flex: 1 },
-  label: { display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#0f172a' },
+  label: { display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' },
   input: { width: '100%', padding: '14px 16px', borderRadius: '12px', fontSize: '15px', transition: 'all 0.2s' },
-  button: { width: '100%', padding: '16px', background: 'linear-gradient(135deg, #6366f1, #7c3aed)', color: 'white', border: 'none', borderRadius: '12px', fontSize: '16px', fontWeight: '700', cursor: 'pointer', marginTop: '10px', boxShadow: '3px 3px 0 rgba(79,70,229,0.22), 0 8px 22px rgba(99,102,241,0.32)' },
-  linkText: { marginTop: '24px', color: '#64748b', fontSize: '14px', textAlign: 'center' },
-  link: { color: '#6366f1', textDecoration: 'none', fontWeight: '700' },
+  button: { width: '100%', padding: '16px', background: 'linear-gradient(135deg, var(--primary), var(--primary-strong))', color: 'white', border: 'none', borderRadius: '12px', fontSize: '16px', fontWeight: '700', cursor: 'pointer', marginTop: '10px', boxShadow: '4px 4px 0 rgba(91,93,246,0.24), 0 10px 24px rgba(91,93,246,0.28)' },
+  linkText: { marginTop: '24px', color: 'var(--text-secondary)', fontSize: '14px', textAlign: 'center' },
+  link: { color: 'var(--primary)', textDecoration: 'none', fontWeight: '700' },
   banner: { width: '100%', padding: '12px', borderRadius: '8px', marginBottom: '20px', fontSize: '14px', textAlign: 'center', fontWeight: '500' }
 };
 

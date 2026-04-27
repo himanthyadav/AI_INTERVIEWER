@@ -33,9 +33,9 @@ function Dashboard() {
   const rounds = ['Warm Up', 'Technical', 'Behavioral'];
   const durations = ['5 mins', '15 mins', '30 mins'];
   const interviewers = [
-    { name: 'Susmitha', type: 'IN Accent', icon: 'Susmitha' },
+    { name: 'Ira', type: 'IN Accent', icon: 'Ira' },
     { name: 'Kapil', type: 'IN Accent', icon: 'Kapil' },
-    { name: 'Mohith', type: 'IN Accent', icon: 'Mohith' }
+    { name: 'Rishab', type: 'IN Accent', icon: 'Rishab' }
   ];
 
   const showToast = (msg) => {
