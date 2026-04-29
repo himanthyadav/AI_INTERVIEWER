@@ -19,7 +19,7 @@ const ThemeToggle = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   return (
     <button onClick={toggleTheme} style={styles.themeToggle} className="app-theme-toggle">
-      {theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode'}
+      {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
     </button>
   );
 };

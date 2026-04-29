@@ -186,7 +186,7 @@ function Interview() {
   };
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="interview-shell">
       <div style={styles.topBar} className="glass-panel">
         <div style={styles.statusGroup}>
           <div style={styles.recordingDot}></div>
@@ -214,7 +214,7 @@ function Interview() {
           <div style={styles.chatScroll}>
             {messages.length === 0 && <div style={styles.emptyChat}>System initialized. Waiting for AI...</div>}
             {messages.map((msg, idx) => (
-              <div key={idx} style={{...styles.msgBubble, alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start', background: msg.role === 'user' ? 'linear-gradient(135deg, #6366f1, #7c3aed)' : '#ffffff', color: msg.role === 'user' ? '#fff' : '#0f172a', borderTop: msg.role === 'user' ? 'none' : '2px solid rgba(255,255,255,0.95)', borderLeft: msg.role === 'user' ? 'none' : '2px solid rgba(255,255,255,0.85)', borderBottom: msg.role === 'user' ? 'none' : '2px solid rgba(99,102,241,0.18)', borderRight: msg.role === 'user' ? 'none' : '2px solid rgba(99,102,241,0.12)', boxShadow: msg.role === 'user' ? '3px 3px 0 rgba(79,70,229,0.22), 0 6px 18px rgba(99,102,241,0.28)' : '2px 2px 0 rgba(99,102,241,0.08), 0 4px 12px rgba(99,102,241,0.07)'}} className="animate-slide-up">
+              <div key={idx} style={{...styles.msgBubble, alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start', background: msg.role === 'user' ? 'linear-gradient(135deg, #6366f1, #7c3aed)' : '#ffffff', color: msg.role === 'user' ? '#fff' : '#0f172a', borderTop: msg.role === 'user' ? 'none' : '2px solid rgba(255,255,255,0.95)', borderLeft: msg.role === 'user' ? 'none' : '2px solid rgba(255,255,255,0.85)', borderBottom: msg.role === 'user' ? 'none' : '2px solid rgba(99,102,241,0.18)', borderRight: msg.role === 'user' ? 'none' : '2px solid rgba(99,102,241,0.12)', boxShadow: msg.role === 'user' ? '3px 3px 0 rgba(79,70,229,0.22), 0 6px 18px rgba(99,102,241,0.28)' : '2px 2px 0 rgba(99,102,241,0.08), 0 4px 12px rgba(99,102,241,0.07)'}} className={`animate-slide-up interview-bubble ${msg.role === 'user' ? 'user' : 'ai'}`}>
                 <div style={{...styles.msgLabel, color: msg.role === 'user' ? 'rgba(255,255,255,0.7)' : 'var(--text-secondary)'}}>
                   {msg.role === 'user' ? 'You' : 'AI'}
                 </div>

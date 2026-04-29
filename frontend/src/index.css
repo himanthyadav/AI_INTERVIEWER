@@ -176,6 +176,119 @@ html[data-theme='dark'] button {
   border-right: 2px solid rgba(167,139,250,0.16);
 }
 
+html[data-theme='dark'] .dashboard-shell,
+html[data-theme='dark'] .interview-shell {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .dashboard-shell .glass-panel,
+html[data-theme='dark'] .interview-shell .glass-panel {
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.96) 0%, rgba(15, 23, 42, 0.90) 52%, rgba(17, 24, 39, 0.96) 100%) !important;
+  background-image: linear-gradient(145deg, rgba(15, 23, 42, 0.96) 0%, rgba(15, 23, 42, 0.90) 52%, rgba(17, 24, 39, 0.96) 100%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.20) !important;
+  border-right: 1px solid rgba(124, 58, 237, 0.16) !important;
+  box-shadow: 0 18px 38px rgba(2, 8, 23, 0.45), 4px 4px 0 rgba(2, 8, 23, 0.22), -2px -2px 0 rgba(255, 255, 255, 0.03) !important;
+}
+
+html[data-theme='dark'] .dashboard-shell button,
+html[data-theme='dark'] .interview-shell button {
+  background: rgba(15, 23, 42, 0.82) !important;
+  color: var(--text-primary) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.20) !important;
+  border-right: 1px solid rgba(124, 58, 237, 0.16) !important;
+  box-shadow: 0 10px 24px rgba(2, 8, 23, 0.24) !important;
+}
+
+html[data-theme='dark'] .dashboard-shell button[style*='linear-gradient(135deg, #6366f1, #7c3aed)'],
+html[data-theme='dark'] .dashboard-shell button[style*='linear-gradient(135deg, #6366f1, #a855f7)'],
+html[data-theme='dark'] .dashboard-shell button[style*='linear-gradient(135deg, var(--primary), var(--primary-strong))'],
+html[data-theme='dark'] .interview-shell button[style*='linear-gradient(135deg, #6366f1, #7c3aed)'],
+html[data-theme='dark'] .interview-shell button[style*='linear-gradient(135deg, #6366f1, #a855f7)'],
+html[data-theme='dark'] .interview-shell button[style*='linear-gradient(135deg, var(--primary), var(--primary-strong))'] {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 10px 24px rgba(99, 102, 241, 0.28), 3px 3px 0 rgba(79, 70, 229, 0.24) !important;
+}
+
+html[data-theme='dark'] .dashboard-shell button[style*='rgba(239,68,68'],
+html[data-theme='dark'] .interview-shell button[style*='rgba(239,68,68'] {
+  background: rgba(127, 29, 29, 0.22) !important;
+  color: #fca5a5 !important;
+  border-top: 1px solid rgba(248, 113, 113, 0.26) !important;
+  border-left: 1px solid rgba(248, 113, 113, 0.20) !important;
+  border-bottom: 1px solid rgba(185, 28, 28, 0.28) !important;
+  border-right: 1px solid rgba(185, 28, 28, 0.24) !important;
+}
+
+html[data-theme='dark'] .dashboard-shell input,
+html[data-theme='dark'] .dashboard-shell select,
+html[data-theme='dark'] .dashboard-shell textarea,
+html[data-theme='dark'] .interview-shell input,
+html[data-theme='dark'] .interview-shell select,
+html[data-theme='dark'] .interview-shell textarea {
+  background: rgba(15, 23, 42, 0.90) !important;
+  color: var(--text-primary) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.20) !important;
+  border-right: 1px solid rgba(124, 58, 237, 0.16) !important;
+}
+
+html[data-theme='dark'] .dashboard-shell h1,
+html[data-theme='dark'] .dashboard-shell h2,
+html[data-theme='dark'] .dashboard-shell h3,
+html[data-theme='dark'] .dashboard-shell p,
+html[data-theme='dark'] .dashboard-shell label,
+html[data-theme='dark'] .dashboard-shell span,
+html[data-theme='dark'] .interview-shell h1,
+html[data-theme='dark'] .interview-shell h2,
+html[data-theme='dark'] .interview-shell h3,
+html[data-theme='dark'] .interview-shell p,
+html[data-theme='dark'] .interview-shell label,
+html[data-theme='dark'] .interview-shell span {
+  color: var(--text-primary) !important;
+}
+
+html[data-theme='dark'] .dashboard-shell p,
+html[data-theme='dark'] .dashboard-shell label,
+html[data-theme='dark'] .dashboard-shell .mainSubtitle,
+html[data-theme='dark'] .dashboard-shell .navSubtitle,
+html[data-theme='dark'] .dashboard-shell .sectionSubtitle,
+html[data-theme='dark'] .dashboard-shell .overviewText,
+html[data-theme='dark'] .dashboard-shell .infoListItem,
+html[data-theme='dark'] .dashboard-shell .checkboxText,
+html[data-theme='dark'] .dashboard-shell .personaType,
+html[data-theme='dark'] .dashboard-shell .mainSubtitle,
+html[data-theme='dark'] .interview-shell .aiStatus,
+html[data-theme='dark'] .interview-shell .emptyChat,
+html[data-theme='dark'] .interview-shell .msgLabel,
+html[data-theme='dark'] .interview-shell .statusText {
+  color: var(--text-secondary) !important;
+}
+
+html[data-theme='dark'] .interview-shell .interview-bubble {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18) !important;
+  border-right: 1px solid rgba(124, 58, 237, 0.14) !important;
+  box-shadow: 0 10px 22px rgba(2, 8, 23, 0.22) !important;
+}
+
+html[data-theme='dark'] .interview-shell .interview-bubble.ai {
+  background: rgba(15, 23, 42, 0.90) !important;
+  color: var(--text-primary) !important;
+}
+
+html[data-theme='dark'] .interview-shell .interview-bubble.user {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.96), rgba(124, 58, 237, 0.96)) !important;
+  color: #ffffff !important;
+}
+
 button:hover {
   transform: translateY(-1px) scale(1.02);
   filter: saturate(1.06);
