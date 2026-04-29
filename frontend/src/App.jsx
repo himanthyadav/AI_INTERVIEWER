@@ -16,23 +16,25 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const ThemeToggle = () => {
-  const { toggleTheme } = useContext(ThemeContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
   return (
     <button onClick={toggleTheme} style={styles.themeToggle} className="app-theme-toggle">
-      ☀️ Light
+      {theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode'}
     </button>
   );
 };
 
 function App() {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', 'light');
-    localStorage.setItem('theme', 'light');
-  }, []);
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
-  const toggleTheme = () => {};
+  const toggleTheme = () => {
+    setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'));
+  };
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
@@ -66,18 +68,18 @@ const styles = {
     top: '20px',
     right: '20px',
     zIndex: 1000,
-    background: '#ffffff',
-    color: '#6366f1',
-    borderTop:    '2px solid rgba(255,255,255,0.95)',
-    borderLeft:   '2px solid rgba(255,255,255,0.85)',
-    borderBottom: '2px solid rgba(99,102,241,0.22)',
-    borderRight:  '2px solid rgba(99,102,241,0.16)',
+    background: 'var(--surface-solid)',
+    color: 'var(--text-primary)',
+    borderTop:    '2px solid var(--border-top)',
+    borderLeft:   '2px solid var(--border-left)',
+    borderBottom: '2px solid var(--border-bottom)',
+    borderRight:  '2px solid var(--border-right)',
     padding: '10px 18px',
     borderRadius: '30px',
-    cursor: 'default',
+    cursor: 'pointer',
     fontWeight: '700',
     fontSize: '15px',
-    boxShadow: '3px 3px 0 rgba(99,102,241,0.12), -2px -2px 0 rgba(255,255,255,0.95), 0 6px 18px rgba(99,102,241,0.10)',
+    boxShadow: '3px 3px 0 rgba(91,93,246,0.12), -2px -2px 0 rgba(255,255,255,0.95), 0 6px 18px rgba(91,93,246,0.10)',
     transition: 'all 0.2s ease'
   },
   loaderWrapper: {
